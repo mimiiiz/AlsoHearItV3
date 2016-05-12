@@ -58,7 +58,8 @@
 
 -(void)setCurrentChannel{
     [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
-        geoPoint = [PFGeoPoint geoPointWithLatitude:13.9133006 longitude:100.5984918];
+        //fix location
+        //geoPoint = [PFGeoPoint geoPointWithLatitude:13.9133006 longitude:100.5984918];
         currentChannel = [self findNearestChannel:geoPoint];
         
         if(currentChannel != NULL){
@@ -77,9 +78,9 @@
     for (Channel *tmp in channels){
         double distance = [currentGeopoint distanceInKilometersTo:tmp.location];
         double radius = [tmp.radius doubleValue]/1000;
-//        NSLog(@"user latitude %f : longitude %f",currentGeopoint.latitude ,currentGeopoint.longitude);
-//        NSLog(@"channel latitude %f : longitude %f",tmp.location.latitude ,tmp.location.longitude);
-//        NSLog(@"Distance from user to %@ channel is %f km",tmp.name ,distance);
+        NSLog(@"user latitude %f : longitude %f",currentGeopoint.latitude ,currentGeopoint.longitude);
+        NSLog(@"channel latitude %f : longitude %f",tmp.location.latitude ,tmp.location.longitude);
+        NSLog(@"Distance from user to %@ channel is %f km",tmp.name ,distance);
         if (distance <= radius && distance < nearestRange){
             nearestChannel = tmp;
             nearestRange = distance;

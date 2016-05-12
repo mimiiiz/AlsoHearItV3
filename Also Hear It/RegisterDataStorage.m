@@ -27,7 +27,6 @@ static RegisterDataStorage *dataSingleton;
 @synthesize location;
 @synthesize locationText;
 
-@synthesize signLanguage;
 
 
 
@@ -52,7 +51,6 @@ static RegisterDataStorage *dataSingleton;
     dataSingleton.location = nil;
     dataSingleton.locationText = nil;
     
-    dataSingleton.signLanguage = nil;
     
     return dataSingleton;
 }

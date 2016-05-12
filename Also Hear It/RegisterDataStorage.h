@@ -26,7 +26,6 @@
     PFGeoPoint *location;
     NSString *locationText;
     
-    NSString *signLanguage;
     
 
 }
@@ -46,7 +45,6 @@
 @property (nonatomic) PFGeoPoint *location;
 @property (nonatomic) NSString *locationText;
 
-@property (nonatomic) NSString *signLanguage;
 
 
 

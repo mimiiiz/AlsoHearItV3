@@ -42,13 +42,9 @@
     [self.view addGestureRecognizer:tap];
 }
 - (IBAction)sendButtonTapped:(id)sender {
-    ASUser *currentUser = [ASUser currentUser];
-    if ([self.emailTextField.text isEqualToString:currentUser.email]) {
-        [ASUser requestPasswordResetForEmailInBackground:currentUser.email];
-    }
-    else{
-        self.errorLabel.text = @"Invalid email address.";
-    }
+
+    [PFUser requestPasswordResetForEmailInBackground:self.emailTextField.text];
+
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {

@@ -81,7 +81,7 @@
                                             if (currentUser) {
                                                 if ([currentUser.type isEqualToString:@"announcer"]) {
                                                     [self goingAnnouncerView];
-                                                } else if ([currentUser.type isEqualToString:@"deafSignLanguage"] || [currentUser.type isEqualToString:@"deafUnSignLanguage"]) {
+                                                } else if ([currentUser.type isEqualToString:@"deaf"]) {
                                                     [self goingDeafView];
                                                 } else if ([currentUser.type isEqualToString:@"admin"]){
                                                     [self goingAdminView];

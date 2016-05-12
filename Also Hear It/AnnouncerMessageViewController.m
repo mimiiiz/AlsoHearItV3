@@ -225,7 +225,7 @@
 -(void) sendPushNotification{
     PFPush *push = [[PFPush alloc] init];
     [push setChannels:channelnameWithTag];
-    NSString *pushText = textFromInput;
+    NSString *pushText = [NSString stringWithFormat:@"%@ | %@",announcerChannel.name ,textFromInput];
     if (textFromInput.length >200) {
         pushText = [textFromInput substringToIndex:200];
     }

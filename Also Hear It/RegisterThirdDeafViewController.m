@@ -12,7 +12,7 @@
 
 @interface RegisterThirdDeafViewController ()
 
-@property (weak, nonatomic) IBOutlet UISegmentedControl *signLanguageSegmentedControl;
+//@property (weak, nonatomic) IBOutlet UISegmentedControl *signLanguageSegmentedControl;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *bottomViewconstraint;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *bodyLabel;
@@ -23,6 +23,7 @@
 @implementation RegisterThirdDeafViewController{
     RegisterDataStorage *dataStorage;
     NSString *signLanguage;
+    
 }
 
 - (void)viewDidLoad {
@@ -32,9 +33,9 @@
     // Do any additional setup after loading the view.
 }
 
--(void)viewWillDisappear:(BOOL)animated{
-    dataStorage.signLanguage = signLanguage;
-}
+//-(void)viewWillDisappear:(BOOL)animated{
+//    dataStorage.signLanguage = signLanguage;
+//}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -46,10 +47,12 @@
 }
 
 - (void)setupUI {
-    [self setDataField];
+    //[self setDataField];
+    UIImage* logoImage = [UIImage imageNamed:@"WhiteBarLogo.png"];
+    self.navigationItem.titleView = [[UIImageView alloc] initWithImage:logoImage];
     [self.loadingView stopAnimating];
-    self.titleLabel.text = @"Did  Language";
-    self.bodyLabel.text = @"Did";
+    self.titleLabel.text = @"Sign up";
+    self.bodyLabel.text = @"Also hear it accept term. Also hear it accept term. Also hear it accept term. Also hear it accept term. Also hear it accept term. Also hear it accept term. Also hear it accept term. Also hear it accept term. Also hear it accept term. Also hear it accept term. Also hear it accept term. Also hear it accept term. Also hear it accept term.";
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(goToMainPage)
@@ -57,33 +60,33 @@
                                                object:nil];
 }
 
-- (void)setDataField{
-    if ([dataStorage.signLanguage length] == 0) {
-        signLanguage = [self getsignLanguageFromIndex:0];
-    } else {
-        signLanguage = dataStorage.signLanguage;
-    }
-    self.signLanguageSegmentedControl.selectedSegmentIndex = [self getsignLanguageIndex:signLanguage];
-}
-
-- (IBAction)signLanguageChange:(id)sender {
-    NSInteger signLanguageSlectedValude = self.signLanguageSegmentedControl.selectedSegmentIndex;
-    signLanguage = [self getsignLanguageFromIndex:signLanguageSlectedValude];
-}
-
-- (NSString *)getsignLanguageFromIndex:(NSInteger) index{
-    if (index == 0) {
-        return @"SignLanguage";
-    }
-    return @"UnSignLanguage";
-}
-
-- (NSInteger)getsignLanguageIndex:(NSString *) signLang{
-    if ([signLang  isEqual: @"SignLanguage"]) {
-        return 0;
-    }
-    return 1;
-}
+//- (void)setDataField{
+//    if ([dataStorage.signLanguage length] == 0) {
+//        signLanguage = [self getsignLanguageFromIndex:0];
+//    } else {
+//        signLanguage = dataStorage.signLanguage;
+//    }
+//    self.signLanguageSegmentedControl.selectedSegmentIndex = [self getsignLanguageIndex:signLanguage];
+//}
+//
+//- (IBAction)signLanguageChange:(id)sender {
+//    NSInteger signLanguageSlectedValude = self.signLanguageSegmentedControl.selectedSegmentIndex;
+//    signLanguage = [self getsignLanguageFromIndex:signLanguageSlectedValude];
+//}
+//
+//- (NSString *)getsignLanguageFromIndex:(NSInteger) index{
+//    if (index == 0) {
+//        return @"SignLanguage";
+//    }
+//    return @"UnSignLanguage";
+//}
+//
+//- (NSInteger)getsignLanguageIndex:(NSString *) signLang{
+//    if ([signLang  isEqual: @"SignLanguage"]) {
+//        return 0;
+//    }
+//    return 1;
+//}
 
 - (IBAction)signUpButtonTapped:(id)sender {
     [self setAnimationLoading:YES];
@@ -101,7 +104,8 @@
     user.lastname = dataStorage.lastname;
     user.birthdate = dataStorage.birthdate;
     user.gender = dataStorage.gender;
-    user.type = [NSString stringWithFormat:@"deaf%@", signLanguage];
+    user.type = @"deaf";
+    //user.type = [NSString stringWithFormat:@"deaf%@", signLanguage];
     
     [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         [self setAnimationLoading:NO];

@@ -10,7 +10,7 @@
 #import "Channel.h"
 //#import "Parse/Parse.h"
 
-@interface ChannelEditTableViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
+@interface ChannelEditTableViewController () <MKMapViewDelegate ,UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 
 @property (strong , nonatomic) IBOutlet MKMapView *channelMap;
 @property (strong, nonatomic) IBOutlet UITextField *channelNameField;
@@ -57,8 +57,9 @@
     pinlocation.longitude = channelSet.location.longitude;
     MKPointAnnotation *Pin = [[MKPointAnnotation alloc]init];
     Pin.coordinate = pinlocation;
+
     [self.channelMap addAnnotation:Pin];
-    
+
     //set MapView
     MKCoordinateRegion newRegion;
     newRegion.center.latitude = channelSet.location.latitude;
@@ -75,6 +76,28 @@
     [self loadImage];
     
 }
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
+    //if annotation is the user location,
+    //return nil so map view shows default view for it (blue dot)...
+    if ([annotation isKindOfClass:[MKUserLocation class]]){
+        return nil;
+    }
+    
+    static NSString *reuseId = @"annotation";
+    MKAnnotationView *pinView = [self.channelMap dequeueReusableAnnotationViewWithIdentifier:reuseId];
+    if (!pinView){
+        pinView = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:reuseId];
+        [pinView setImage:[UIImage imageNamed:@"Location"]];
+        pinView.canShowCallout = YES;
+        
+        CGPoint centerOfPin = CGPointMake(pinView.centerOffset.x, pinView.centerOffset.y-25);
+        [pinView setCenterOffset:centerOfPin];
+    } else {
+        pinView.annotation = annotation;
+    }
+    
+    return pinView;
+}
 
 -(void)loadImage{
     PFFile *userImage = [channelSet objectForKey:@"channelPic"];
@@ -89,6 +112,7 @@
     
     
 }
+
 
 -(void)imageUpload{
     // Convert to JPEG with 50% quality

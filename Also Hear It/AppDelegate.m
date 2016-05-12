@@ -39,7 +39,7 @@
     if (currentUser) {
         if ([currentUser.type isEqualToString:@"announcer"]) {
             self.window.rootViewController = [[UIStoryboard storyboardWithName:@"Announcer" bundle:[NSBundle mainBundle]] instantiateInitialViewController];
-        }else if ([currentUser.type isEqualToString:@"deafSignLanguage"] || [currentUser.type isEqualToString:@"deafUnSignLanguage"]) {
+        }else if ([currentUser.type isEqualToString:@"deaf"] ){
             self.window.rootViewController = [[UIStoryboard storyboardWithName:@"Deaf" bundle:[NSBundle mainBundle]] instantiateInitialViewController];
         }else if ([currentUser.type isEqualToString:@"admin"]){
             self.window.rootViewController = [[UIStoryboard storyboardWithName:@"Admin" bundle:[NSBundle mainBundle]] instantiateInitialViewController];

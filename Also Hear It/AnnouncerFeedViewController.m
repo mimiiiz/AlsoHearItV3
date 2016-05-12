@@ -70,6 +70,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [self loadObjects];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -184,9 +185,9 @@
                 }
             }
         }
-    }else if(day > 0){
+    }if(day > 0){
         return [NSString stringWithFormat:@"%lu days ago",(unsigned long)day];
-    }else if(day > 7){
+    }if(day > 7){
         return [NSString stringWithFormat:@"%lu weeks ago",(unsigned long)day/7];
     }
     

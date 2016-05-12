@@ -23,6 +23,7 @@
 @end
 
 @implementation DetailMessageViewController {
+    
     CGSize viewSize;
 }
 
@@ -31,6 +32,19 @@
     [self setupData];
     [self setupUI];
     // Do any additional setup after loading the view.
+}
+- (IBAction)actionButtonTapped:(id)sender {
+    NSArray *activityItemsArray = [NSArray arrayWithObject:[NSString stringWithFormat:@"%@\r%@",self.message.channel.name, self.message.text]];
+    UIActivityViewController *controller = [[UIActivityViewController alloc] initWithActivityItems:activityItemsArray applicationActivities:nil];
+    
+    NSArray *excludedActivities = @[UIActivityTypeAirDrop,
+                                    UIActivityTypePostToWeibo,
+                                    UIActivityTypePrint,
+                                    UIActivityTypeAssignToContact, UIActivityTypeSaveToCameraRoll,
+                                    UIActivityTypeAddToReadingList, UIActivityTypePostToFlickr,
+                                    UIActivityTypePostToVimeo, UIActivityTypePostToTencentWeibo];
+    controller.excludedActivityTypes = excludedActivities;
+    [self presentViewController:controller animated:YES completion:nil];
 }
 
 - (void)didReceiveMemoryWarning {
