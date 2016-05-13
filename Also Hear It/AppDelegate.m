@@ -45,7 +45,6 @@
             self.window.rootViewController = [[UIStoryboard storyboardWithName:@"Admin" bundle:[NSBundle mainBundle]] instantiateInitialViewController];
         }
     }
-
     return YES;
 }
 
