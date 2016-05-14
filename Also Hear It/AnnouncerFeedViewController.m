@@ -55,6 +55,7 @@
     self.navigationItem.titleView = [[UIImageView alloc] initWithImage:logoImage];
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.estimatedRowHeight = 100.0;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -153,6 +154,34 @@
      cell.imageFlag.image = [UIImage imageNamed:priorityFlagName];
      cell.tagLabel.text = [self getTags:object.tags];
      
+     PFFile *attachImageFile = object.image;
+     [attachImageFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+        UIImage *tmpImage = [UIImage imageWithData:data];
+        cell.attachImage.image = tmpImage;
+        cell.attachImage.contentMode = UIViewContentModeCenter;
+
+//         if(error == nil){
+//             UIImage *tmpImage = [UIImage imageWithData:data];
+//             cell.attachImage.image = tmpImage;
+//             
+//             
+//             if (tmpImage.size.height < tmpImage.size.width){
+//                 cell.attachImageHeightConstraint.constant = 200;
+//             }else{
+//                 cell.attachImageHeightConstraint.constant = 150;
+//
+//             }
+//             cell.attachImage.contentMode = UIViewContentModeScaleAspectFit;
+//             
+//        
+//         }else{
+//             cell.attachImage.image = nil;
+//             cell.attachImage.hidden = YES;
+//             cell.attachImageHeightConstraint.constant = -5 ;
+//         }
+     }];
+     
+     
      cell.profilePic.image = [UIImage imageNamed:@"Profile.png"];
      PFFile *imageFile = object.channel.channelPic;
      [imageFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
@@ -165,12 +194,12 @@
 
 -(NSString *)getTime:(NSDate *)date {
     NSTimeInterval timeSinceDate = [[NSDate date] timeIntervalSinceDate:date];
-    NSUInteger day = (NSUInteger)(timeSinceDate / (timeSinceDate /  60.0 * 60.0));
+    NSUInteger daysSinceDate = (NSUInteger)((timeSinceDate / (60.0 * 60.0))/24.0);
+    NSUInteger hoursSinceDate = (NSUInteger)(timeSinceDate / (60.0 * 60.0));
+    //NSUInteger secsSinceDate = (NSUInteger) fmod(timeSinceDate,(24.0 * 60.0 * 60.0));
 
     // print up to 24 hours as a relative offset
     if(timeSinceDate < 24.0 * 60.0 * 60.0){
-        NSUInteger hoursSinceDate = (NSUInteger)(timeSinceDate / (60.0 * 60.0));
-        NSUInteger secsSinceDate = (NSUInteger) fmod(timeSinceDate,(24.0 * 60.0 * 60.0));
         switch(hoursSinceDate){
             default:{
                 return [NSString stringWithFormat:@"%lu hours ago", (unsigned long)hoursSinceDate];
@@ -179,16 +208,16 @@
             }case 0: {
                 NSUInteger minutesSinceDate = (NSUInteger)(timeSinceDate / 60.0);
                 if(minutesSinceDate <= 0){
-                    return [NSString stringWithFormat:@"%lu secs ago",(unsigned long)secsSinceDate];
+                    return [NSString stringWithFormat:@"Just now"];
                 }else {
                     return [NSString stringWithFormat:@"%lu mins ago",(unsigned long)minutesSinceDate];
                 }
             }
         }
-    }if(day > 0){
-        return [NSString stringWithFormat:@"%lu days ago",(unsigned long)day];
-    }if(day > 7){
-        return [NSString stringWithFormat:@"%lu weeks ago",(unsigned long)day/7];
+    }else {
+        NSLog(@"%d",daysSinceDate);
+        return [NSString stringWithFormat:@"%lu days ago",(unsigned long)daysSinceDate];
+
     }
     
     return @"";

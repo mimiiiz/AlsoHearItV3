@@ -19,6 +19,8 @@
 @property (weak, nonatomic) IBOutlet UIView *bottomView;
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UIImageView *priorityFlag;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *attachImageHeightConstraint;
+@property (weak, nonatomic) IBOutlet UIImageView *attachImageView;
 
 @end
 
@@ -53,18 +55,34 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated{
-    viewSize = CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height);
+    //viewSize = CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height);
 }
 
 - (void)viewDidAppear:(BOOL)animated{
-    [self.scrollView setContentSize:viewSize];
+    //[self.scrollView setContentSize:viewSize];
 }
 
 -(void)setupData {
     PFFile *imageFile = self.message.channel.channelPic;
     [imageFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+        NSLog(@"%d",[data isEqual:nil]);
         self.imageView.image = [UIImage imageWithData:data];
     }];
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    CGFloat screenWidth = screenRect.size.width;
+    CGFloat screenHeight = screenRect.size.height;
+    
+    
+
+    
+    PFFile *attachImageData =self.message.image;
+    [attachImageData getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+        UIImage *attachImage = [UIImage imageWithData:data];
+        self.attachImageView.image = attachImage;
+        self.attachImageHeightConstraint.constant = (attachImage.size.height/attachImage.size.width)*(screenWidth);
+
+    }];
+    
 }
 
 - (void)setupUI {
@@ -86,7 +104,7 @@
     NSString *priorityFlagName = [NSString stringWithFormat:@"bookmark-%@", priority];
     self.priorityFlag.image = [UIImage imageNamed:priorityFlagName];
     
-    [self addUpperBorder:self.bottomView];
+    //[self addBottomBorder:self.bottomView];
 }
 
 - (void)addUpperBorder:(UIView *)view {

@@ -20,6 +20,10 @@
 
 @interface AnnouncerMessageViewController () <UITextViewDelegate, UIImagePickerControllerDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *profileImage;
+@property (weak, nonatomic) IBOutlet UIImageView *attachImage;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageConstraints;
+@property (weak, nonatomic) IBOutlet UIView *errorView;
+@property (weak, nonatomic) IBOutlet UIProgressView *progressBar;
 
 @property (weak, nonatomic) IBOutlet UITextView *inputTextView;
 @property (strong, nonatomic) IBOutlet UILabel *labelName;
@@ -101,7 +105,9 @@
                                              selector:@selector(keyboardDidHide:)
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
-    
+    [self.inputTextView becomeFirstResponder];
+    [self changeSendButtonState];
+    self.progressBar.hidden = YES;
 
 }
 
@@ -147,7 +153,7 @@
     
     UIImagePickerController *picker = [[UIImagePickerController alloc] init];
     picker.delegate = self;
-    picker.allowsEditing = YES;
+    picker.allowsEditing = NO;
     picker.sourceType = UIImagePickerControllerSourceTypeCamera;
     
     [self presentViewController:picker animated:YES completion:NULL];
@@ -158,7 +164,7 @@
     
     UIImagePickerController *picker = [[UIImagePickerController alloc] init];
     picker.delegate = self;
-    picker.allowsEditing = YES;
+    picker.allowsEditing = NO;
     picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     
     [self presentViewController:picker animated:YES completion:NULL];
@@ -167,9 +173,19 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     
-    UIImage *chosenImage = info[UIImagePickerControllerEditedImage];
-    //self.imageView.image = chosenImage;
+    UIImage *chosenImage = info[UIImagePickerControllerOriginalImage];
     
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    CGFloat screenWidth = screenRect.size.width;
+    CGFloat screenHeight = screenRect.size.height;
+//    NSLog(@"%f, %f",screenWidth, screenHeight);
+//    NSLog(@"%f, %f",chosenImage.size.width, chosenImage.size.height);
+
+    
+    self.imageConstraints.constant = (chosenImage.size.height/chosenImage.size.width)*(screenWidth-20);
+
+    self.attachImage.image = chosenImage;
+
     [picker dismissViewControllerAnimated:YES completion:NULL];
     
 }
@@ -178,6 +194,21 @@
     
     [picker dismissViewControllerAnimated:YES completion:NULL];
     
+}
+
+-(UIImage*)imageWithImage: (UIImage*) sourceImage scaledToWidth: (float) i_width
+{
+    float oldWidth = sourceImage.size.width;
+    float scaleFactor = i_width / oldWidth;
+    
+    float newHeight = sourceImage.size.height * scaleFactor;
+    float newWidth = oldWidth * scaleFactor;
+    
+    UIGraphicsBeginImageContext(CGSizeMake(newWidth, newHeight));
+    [sourceImage drawInRect:CGRectMake(0, 0, newWidth, newHeight)];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
 }
 
 -(void)setChannelsStringWithSelectedTags{
@@ -241,7 +272,8 @@
 
 - (IBAction)sendButtonTapped:(id)sender {
     [self setAnimationLoading:YES];
-    
+    self.progressBar.hidden = NO;
+    self.progressBar.progress = 0.1;
     textFromInput = self.inputTextView.text;
     [self setChannelsStringWithSelectedTags];
     [self savingPushNotificationToMessage];
@@ -266,17 +298,30 @@
     PFQuery *userQuery = [ASUser query];
     [userQuery whereKey:@"channels" containedIn:Channeltexts];
     NSArray *users = [userQuery findObjects];
+    self.progressBar.progress = 0.4;
+
     for (ASUser *tmp in users) {
         [receiverRelation addObject:tmp];
     }
     
+    NSData *imageData = UIImagePNGRepresentation(self.attachImage.image);
+    PFFile *imageFile = [PFFile fileWithName:@"image.png" data:imageData];
+    if (imageData == nil) {
+        NSLog(@"no image");
+    }else{
+        pushMessage.image = imageFile;
+
+    }
     [pushMessage saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
             // The object has been saved.
+            self.progressBar.progress = 0.9;
+
             [self sendPushNotification];
         }
     }];
 }
+
 
 -(void) sendPushNotification{
     PFPush *push = [[PFPush alloc] init];
@@ -290,6 +335,7 @@
         if (succeeded) {
             NSLog(@"sendpushnotification");
             [self setAnimationLoading:NO];
+            self.progressBar.progress = 1.0;
             [self dismissViewControllerAnimated:YES completion:nil];
         }
     }];
@@ -353,9 +399,9 @@
 
 - (void) setAnimationLoading:(BOOL) setting{
     if (setting) {
-        [self.loadingView startAnimating];
-        self.loadingView.layer.backgroundColor = [[UIColor colorWithWhite:0.0f alpha:0.25f] CGColor];
-        self.loadingView.frame = self.view.bounds;
+        //[self.loadingView startAnimating];
+        //self.loadingView.layer.backgroundColor = [[UIColor colorWithWhite:0.0f alpha:0.25f] CGColor];
+        //self.loadingView.frame = self.view.bounds;
         if (![[UIApplication sharedApplication] isIgnoringInteractionEvents]) {
             [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
         }

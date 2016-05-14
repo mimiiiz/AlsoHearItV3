@@ -15,6 +15,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *profilePic;
 @property (weak, nonatomic) IBOutlet UILabel *tagLabel;
 @property (weak, nonatomic) IBOutlet UILabel *messageLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *attachImage;
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageFlag;
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
