@@ -6,7 +6,7 @@
     },
     {
       "idiom" : "universal",
-      "filename" : "Image File Filled-50.png",
+      "filename" : "Image File-48-3.png",
       "scale" : "2x"
     },
     {
@@ -17,5 +17,8 @@
   "info" : {
     "version" : 1,
     "author" : "xcode"
+  },
+  "properties" : {
+    "template-rendering-intent" : "template"
   }
 }

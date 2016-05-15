@@ -57,6 +57,8 @@
     self.navigationItem.titleView = [[UIImageView alloc] initWithImage:logoImage];
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.estimatedRowHeight = 100.0;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -151,6 +153,23 @@
     NSString *priorityFlagName = [NSString stringWithFormat:@"bookmark-%@", priority];
     cell.imageFlag.image = [UIImage imageNamed:priorityFlagName];
     cell.tagLabel.text = [self getTags:object.tags];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        // retrive image on global queue
+        PFFile *attachImageFile = object.image;
+        UIImage * img = [UIImage imageWithData:[attachImageFile getData]];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            //PFTableCustomViewCell * cell = (PFTableCustomViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+            // assign cell image on main thread
+            if(img){
+                cell.attachImage.image = [UIImage imageNamed:@"imageAvailable-2"];
+            }else {
+                cell.attachImage.image = nil;
+            }
+        });
+    });
     
     
     cell.profilePic.image = [UIImage imageNamed:@"Profile.png"];

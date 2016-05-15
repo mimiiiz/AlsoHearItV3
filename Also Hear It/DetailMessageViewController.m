@@ -36,7 +36,12 @@
     // Do any additional setup after loading the view.
 }
 - (IBAction)actionButtonTapped:(id)sender {
-    NSArray *activityItemsArray = [NSArray arrayWithObject:[NSString stringWithFormat:@"%@\r%@",self.message.channel.name, self.message.text]];
+   
+    NSMutableArray *tmp = [NSMutableArray arrayWithObject:[NSString stringWithFormat:@"%@ | %@\r #AlsoHearIt",self.message.channel.name, self.message.text]];
+    if(self.attachImageView.image){
+        [tmp addObject:self.attachImageView.image];
+    }
+    NSArray *activityItemsArray = [NSArray arrayWithArray:tmp];
     UIActivityViewController *controller = [[UIActivityViewController alloc] initWithActivityItems:activityItemsArray applicationActivities:nil];
     
     NSArray *excludedActivities = @[UIActivityTypeAirDrop,
@@ -70,11 +75,9 @@
     }];
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     CGFloat screenWidth = screenRect.size.width;
-    CGFloat screenHeight = screenRect.size.height;
-    
+    //CGFloat screenHeight = screenRect.size.height;
     
 
-    
     PFFile *attachImageData =self.message.image;
     [attachImageData getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
         UIImage *attachImage = [UIImage imageWithData:data];

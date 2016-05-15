@@ -19,4 +19,6 @@
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageFlag;
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
+
+
 @end

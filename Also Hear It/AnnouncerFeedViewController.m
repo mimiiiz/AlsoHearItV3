@@ -146,6 +146,7 @@
      }
      
     // Configure the cell
+     cell.attachImage.contentMode = UIViewContentModeCenter;
      cell.nameLabel.text = object.channel.name;
      cell.messageLabel.text = object.text;
      
@@ -154,39 +155,30 @@
      cell.imageFlag.image = [UIImage imageNamed:priorityFlagName];
      cell.tagLabel.text = [self getTags:object.tags];
      
-     PFFile *attachImageFile = object.image;
-     [attachImageFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-        UIImage *tmpImage = [UIImage imageWithData:data];
-        cell.attachImage.image = tmpImage;
-        cell.attachImage.contentMode = UIViewContentModeCenter;
-
-//         if(error == nil){
-//             UIImage *tmpImage = [UIImage imageWithData:data];
-//             cell.attachImage.image = tmpImage;
-//             
-//             
-//             if (tmpImage.size.height < tmpImage.size.width){
-//                 cell.attachImageHeightConstraint.constant = 200;
-//             }else{
-//                 cell.attachImageHeightConstraint.constant = 150;
-//
-//             }
-//             cell.attachImage.contentMode = UIViewContentModeScaleAspectFit;
-//             
-//        
-//         }else{
-//             cell.attachImage.image = nil;
-//             cell.attachImage.hidden = YES;
-//             cell.attachImageHeightConstraint.constant = -5 ;
-//         }
-     }];
-     
-     
+     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+         // retrive image on global queue
+         PFFile *attachImageFile = object.image;
+         UIImage * img = [UIImage imageWithData:[attachImageFile getData]];
+         
+         dispatch_async(dispatch_get_main_queue(), ^{
+             
+             //PFTableCustomViewCell * cell = (PFTableCustomViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+             // assign cell image on main thread
+             if(img){
+                 cell.attachImage.image = [UIImage imageNamed:@"imageAvailable-2"];
+             }else {
+                 cell.attachImage.image = nil;
+             }
+         });
+     });
+    
      cell.profilePic.image = [UIImage imageNamed:@"Profile.png"];
      PFFile *imageFile = object.channel.channelPic;
      [imageFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
          cell.profilePic.image = [UIImage imageWithData:data];
      }];
+     
+     
      
       cell.timeLabel.text = [self getTime:object.createdAt];
      return cell;
@@ -215,7 +207,6 @@
             }
         }
     }else {
-        NSLog(@"%d",daysSinceDate);
         return [NSString stringWithFormat:@"%lu days ago",(unsigned long)daysSinceDate];
 
     }
