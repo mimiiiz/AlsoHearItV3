@@ -12,8 +12,10 @@
 #import "Channel.h"
 #import "ASUser.h"
 
-@interface DeafChannelTableViewController ()
+@interface DeafChannelTableViewController () <CLLocationManagerDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *currentLabel;
+@property (nonatomic, strong) CLLocationManager *locationManager;
+@property (nonatomic, strong) NSMutableArray *locations;
 
 @end
 
@@ -27,7 +29,7 @@
     [super viewDidLoad];
     [self setupUI];
     [self setupData];
-
+    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -42,9 +44,21 @@
 
 - (void)setupUI{
     self.currentLabel.text = @"loading...";
-    [self setCurrentChannel];
+    [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
+        [self setCurrentChannel:geoPoint];
+    }];
 }
 -(void)setupData {
+    
+    self.locations = [[NSMutableArray alloc] init];
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
+    self.locationManager.delegate = self;
+    self.locationManager.distanceFilter = 50;
+    if([self.locationManager respondsToSelector:@selector(allowsBackgroundLocationUpdates)]){
+        [self.locationManager setAllowsBackgroundLocationUpdates:YES];
+    }
+    
     currentUser = [ASUser currentUser];
     PFQuery *query = [Channel query];
     [query fromLocalDatastore];
@@ -53,22 +67,48 @@
     }];
 }
 - (IBAction)assignChannelTap:(id)sender {
-    [self setCurrentChannel];
+    [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
+        [self setCurrentChannel:geoPoint];
+    }];
+}
+- (IBAction)enabledAutoUpdateStateChange:(UISwitch*)sender {
+    if (sender.on)
+    {
+        NSLog(@"start");
+        [self.locationManager startUpdatingLocation];
+    }
+    else
+    {
+        NSLog(@"stop");
+
+        [self.locationManager stopUpdatingLocation];
+    }
 }
 
--(void)setCurrentChannel{
-    [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
-        //fix location
-        //geoPoint = [PFGeoPoint geoPointWithLatitude:13.9133006 longitude:100.5984918];
-        currentChannel = [self findNearestChannel:geoPoint];
-        
-        if(currentChannel != NULL){
-            self.currentLabel.text = currentChannel.name;
-            [self assignChannel:currentChannel];
-        } else {
-            self.currentLabel.text = @"Place not found. Please try again";
-        }
-    }];
+-(void)setCurrentChannel:(PFGeoPoint *)geoPoint{
+    //fix location
+    //geoPoint = [PFGeoPoint geoPointWithLatitude:13.9133006 longitude:100.5984918];
+    currentChannel = [self findNearestChannel:geoPoint];
+    
+    if(currentChannel != NULL){
+        self.currentLabel.text = currentChannel.name;
+        [self assignChannel:currentChannel];
+    } else {
+        self.currentLabel.text = @"Place not found. Please try again";
+    }
+}
+- (void)locationManager:(CLLocationManager *)manager
+    didUpdateToLocation:(CLLocation *)newLocation
+           fromLocation:(CLLocation *)oldLocation
+{
+    PFGeoPoint *geoPoint = [PFGeoPoint geoPointWithLocation:newLocation];
+    [self setCurrentChannel:geoPoint];
+    
+    if (UIApplication.sharedApplication.applicationState == UIApplicationStateActive){
+        NSLog(@"App is Active. New location is %@", newLocation);
+    }else{
+        NSLog(@"App is backgrounded. New location is %@", newLocation);
+    }
 }
 
 -(Channel *)findNearestChannel:(PFGeoPoint *)currentGeopoint{
@@ -78,9 +118,9 @@
     for (Channel *tmp in channels){
         double distance = [currentGeopoint distanceInKilometersTo:tmp.location];
         double radius = [tmp.radius doubleValue]/1000;
-        NSLog(@"user latitude %f : longitude %f",currentGeopoint.latitude ,currentGeopoint.longitude);
-        NSLog(@"channel latitude %f : longitude %f",tmp.location.latitude ,tmp.location.longitude);
-        NSLog(@"Distance from user to %@ channel is %f km",tmp.name ,distance);
+//        NSLog(@"user latitude %f : longitude %f",currentGeopoint.latitude ,currentGeopoint.longitude);
+//        NSLog(@"channel latitude %f : longitude %f",tmp.location.latitude ,tmp.location.longitude);
+//        NSLog(@"Distance from user to %@ channel is %f km",tmp.name ,distance);
         if (distance <= radius && distance < nearestRange){
             nearestChannel = tmp;
             nearestRange = distance;
