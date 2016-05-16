@@ -832,9 +832,19 @@
                         <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <searchBar key="tableHeaderView" contentMode="redraw" text="" translucent="NO" id="awO-fr-2a0">
+                            <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" red="0.0" green="0.80000000000000004" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="barTintColor" red="0.0" green="0.80000000000000004" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
+                            <textInputTraits key="textInputTraits"/>
+                            <connections>
+                                <outlet property="delegate" destination="FQi-qa-bSv" id="Lf7-xv-GRn"/>
+                            </connections>
+                        </searchBar>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="myCell" id="7bU-lA-tiP" customClass="PFTableCustomViewCell">
-                                <rect key="frame" x="0.0" y="28" width="600" height="101"/>
+                                <rect key="frame" x="0.0" y="72" width="600" height="101"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7bU-lA-tiP" id="ifY-Io-UXl">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="100.5"/>
@@ -901,13 +911,13 @@
                                             </userDefinedRuntimeAttributes>
                                             <variation key="default">
                                                 <mask key="constraints">
-                                                    <exclude reference="zF6-1V-pAt"/>
                                                     <exclude reference="7Ph-JB-GYG"/>
-                                                    <exclude reference="qFC-Qw-OCz"/>
-                                                    <exclude reference="IC0-sZ-dv1"/>
-                                                    <exclude reference="djW-ib-wZe"/>
                                                     <exclude reference="FpT-2i-jXi"/>
+                                                    <exclude reference="IC0-sZ-dv1"/>
                                                     <exclude reference="Zob-Ve-EdZ"/>
+                                                    <exclude reference="djW-ib-wZe"/>
+                                                    <exclude reference="qFC-Qw-OCz"/>
+                                                    <exclude reference="zF6-1V-pAt"/>
                                                 </mask>
                                             </variation>
                                         </imageView>
@@ -968,8 +978,21 @@
                     <navigationItem key="navigationItem" title="Deaf" id="leg-4A-uyG">
                         <barButtonItem key="backBarButtonItem" title=" " id="YWB-RH-qBd"/>
                     </navigationItem>
+                    <connections>
+                        <outlet property="searchBar" destination="awO-fr-2a0" id="ffw-Td-CHu"/>
+                        <outlet property="searchDisplayController" destination="Pok-ny-7DG" id="5XN-w1-lZI"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BDa-Kq-sgN" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <searchDisplayController id="Pok-ny-7DG">
+                    <connections>
+                        <outlet property="delegate" destination="FQi-qa-bSv" id="MDd-in-gPc"/>
+                        <outlet property="searchBar" destination="awO-fr-2a0" id="QwS-XC-ilh"/>
+                        <outlet property="searchContentsController" destination="FQi-qa-bSv" id="ss0-yN-Bta"/>
+                        <outlet property="searchResultsDataSource" destination="FQi-qa-bSv" id="Z0v-iD-fbm"/>
+                        <outlet property="searchResultsDelegate" destination="FQi-qa-bSv" id="M2k-2N-DN9"/>
+                    </connections>
+                </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="-8449" y="-10002"/>
         </scene>
@@ -1075,8 +1098,8 @@
                                                         </constraints>
                                                         <variation key="default">
                                                             <mask key="constraints">
-                                                                <exclude reference="tSo-kE-KA8"/>
                                                                 <exclude reference="fzN-Av-2kn"/>
+                                                                <exclude reference="tSo-kE-KA8"/>
                                                             </mask>
                                                         </variation>
                                                     </imageView>
@@ -1143,12 +1166,12 @@
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
-                                        <exclude reference="hXg-Sq-YsP"/>
-                                        <exclude reference="xGr-W9-Zdt"/>
                                         <exclude reference="dMk-dR-fLe"/>
                                         <exclude reference="eIJ-AX-az9"/>
-                                        <exclude reference="u4g-NJ-FgW"/>
+                                        <exclude reference="hXg-Sq-YsP"/>
                                         <exclude reference="s6F-Lf-E4E"/>
+                                        <exclude reference="u4g-NJ-FgW"/>
+                                        <exclude reference="xGr-W9-Zdt"/>
                                     </mask>
                                 </variation>
                             </scrollView>
@@ -1169,11 +1192,11 @@
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
-                                <exclude reference="iXg-mg-BJY"/>
                                 <exclude reference="P5x-H3-yXm"/>
+                                <exclude reference="iXg-mg-BJY"/>
+                                <exclude reference="rfL-Rk-EbH"/>
                                 <exclude reference="ygL-2J-clA"/>
                                 <exclude reference="zhz-kF-zcz"/>
-                                <exclude reference="rfL-Rk-EbH"/>
                                 <exclude reference="ZEO-8v-mHJ"/>
                             </mask>
                         </variation>

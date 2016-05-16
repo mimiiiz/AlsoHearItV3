@@ -19,6 +19,7 @@
 
 
 @interface DeafFeedViewController ()
+@property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 
 @end
 
@@ -58,6 +59,11 @@
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.estimatedRowHeight = 100.0;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    self.navigationController.navigationBar.translucent = NO;
+    self.searchBar.translucent = false;
+    self.searchBar.barTintColor = [UIColor clearColor];
+    self.searchBar.backgroundImage = [UIImage new];
+
 
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
