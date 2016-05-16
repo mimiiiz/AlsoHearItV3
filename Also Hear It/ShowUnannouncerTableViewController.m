@@ -47,9 +47,6 @@
 }
 
 - (void) getUnannouncerIDs{
-    UIActivityIndicatorView *loadingView = [[UIActivityIndicatorView alloc] init];
-    [self createLoadingView:loadingView];
-    
     PFQuery *queryUser = [ASUser query];
     [queryUser whereKey:@"type" equalTo:@"unannouncer"];
     [queryUser orderByAscending:@"username"];
@@ -67,13 +64,6 @@
         }
         
     }];
-}
-
-- (void)createLoadingView:(UIActivityIndicatorView *)loadingView{
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 50)];
-    [view addSubview:loadingView]; // <-- Your UIActivityIndicatorView
-    self.tableView.tableHeaderView = view;
-    [loadingView startAnimating];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -109,6 +99,13 @@
     Channel *channel = channels[indexPath.row];
     cell.unannouncerIDText.text = channel.announcer.username;
     cell.channelNameText.text = channel.name;
+    
+    NSDate *date = channel.announcer.updatedAt;
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"HH:mm\ndd/mm/yy"];
+    
+    NSString *timeText = [dateFormatter stringFromDate:date];
+    cell.dateTimeText.text = timeText;
     return cell;
 }
 

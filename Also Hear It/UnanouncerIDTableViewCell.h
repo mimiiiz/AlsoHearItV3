@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface UnanouncerIDTableViewCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UILabel *dateTimeText;
 @property (strong, nonatomic) IBOutlet UILabel *unannouncerIDText;
 @property (strong, nonatomic) IBOutlet UILabel *channelNameText;
 @end

@@ -9,11 +9,6 @@
 #import "SendEmailViewController.h"
 #import <MessageUI/MessageUI.h>
 @interface SendEmailViewController () <MFMailComposeViewControllerDelegate>
-@property (strong, nonatomic) IBOutlet UILabel *userNameLabel;
-@property (strong, nonatomic) IBOutlet UITextField *subjectTextField;
-@property (strong, nonatomic) IBOutlet UITextView *messageTextView;
-@property (strong, nonatomic) IBOutlet UIActivityIndicatorView *loadingView;
-
 @end
 
 @implementation SendEmailViewController{
@@ -32,61 +27,27 @@
 }
 
 - (void) setUpUI{
-    self.userNameLabel.text = [NSString stringWithFormat:@"%@ %@", self.user.firstname, self.user.lastname];
-    [self.loadingView stopAnimating];
     
-    [self addBottomBorder:self.subjectTextField];
-    [self addBottomBorder:self.messageTextView];
+    if (![MFMailComposeViewController canSendMail]) {
+        NSLog(@"Mail services are not available.");
+        return;
+    }
     
     mail = [[MFMailComposeViewController alloc] init];
     mail.mailComposeDelegate = self;
-}
-
-- (IBAction)tapSendEmail:(id)sender {
-    if([MFMailComposeViewController canSendMail]) {
-        [self setAnimationLoading:YES];
     
-        [mail setSubject:self.subjectTextField.text];
-        [mail setToRecipients:@[self.user.email]];
-        [mail setMessageBody:self.messageTextView.text isHTML:NO];
-
-        [self presentViewController:mail animated:YES completion:NULL];
-    }
+    [mail setSubject:@"Confirm announcer account"];
+    [mail setToRecipients:@[self.user.email]];
+    
+    [self presentViewController:mail animated:YES completion:NULL];
 }
 
-- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
-    [self setAnimationLoading:NO];
-    if (!error) {
-        NSLog(@"mail sended");
-        [self.navigationController popViewControllerAnimated:NO];
-    } else {
-        NSLog(@"%@", error);
-    }
-}
-
-- (void) setAnimationLoading:(BOOL) setting{
-    if (setting) {
-        [self.loadingView startAnimating];
-        self.loadingView.layer.backgroundColor = [[UIColor colorWithWhite:0.0f alpha:0.25f] CGColor];
-        self.loadingView.frame = self.view.bounds;
-        if (![[UIApplication sharedApplication] isIgnoringInteractionEvents]) {
-            [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
-        }
-    } else {
-        if ([self.loadingView isAnimating]) {
-            [self.loadingView stopAnimating];
-        }
-        if ([[UIApplication sharedApplication] isIgnoringInteractionEvents]) {
-            [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-        }
-    }
-}
-
-- (void)addBottomBorder:(UIView *)view {
-    CALayer *bottomBorder = [CALayer layer];
-    bottomBorder.backgroundColor = [[UIColor lightGrayColor] CGColor];
-    bottomBorder.frame = CGRectMake(0, view.frame.size.height-1, CGRectGetWidth(view.frame), 1.0f);
-    [view.layer addSublayer:bottomBorder];
+- (void)mailComposeController:(MFMailComposeViewController *)controller
+          didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
+    // Check the result or perform other tasks.
+    
+    // Dismiss the mail compose view controller.
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 /*
