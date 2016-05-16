@@ -14,6 +14,7 @@
 #import "UnanouncerIDTableViewCell.h"
 
 @interface ShowUnannouncerTableViewController ()
+@property (weak, nonatomic) IBOutlet UISegmentedControl *listShowSegmentedControl;
 @end
 
 @implementation ShowUnannouncerTableViewController{
@@ -28,8 +29,17 @@
 
 - (void)setUpUI{
     currentUser = [ASUser currentUser];
-    UIImage * logoImage = [UIImage imageNamed:@"WhiteBarLogo.png"];
-    self.navigationItem.titleView = [[UIImageView alloc] initWithImage:logoImage];
+    /*UIImage * logoImage = [UIImage imageNamed:@"WhiteBarLogo.png"];
+     UIView *logoView = [[UIImageView alloc] initWithImage:logoImage];
+     [listShowSegmentedControl setTitle:@"Unannouncer" forSegmentAtIndex:0];
+     [listShowSegmentedControl setTitle:@"Announcer" forSegmentAtIndex:1];
+     [listShowSegmentedControl addTarget:self
+                          action:@selector(getUnannouncerIDs)
+                forControlEvents:UIControlEventValueChanged];
+     [logoView addSubview:listShowSegmentedControl];
+     self.navigationItem.titleView = logoView;
+      */
+    
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     
     self.tableView.estimatedRowHeight = 100.0;
@@ -47,8 +57,14 @@
 }
 
 - (void) getUnannouncerIDs{
+    NSInteger listShowIndex = self.listShowSegmentedControl.selectedSegmentIndex;
+    
     PFQuery *queryUser = [ASUser query];
-    [queryUser whereKey:@"type" equalTo:@"unannouncer"];
+    if (listShowIndex == 0) {
+        [queryUser whereKey:@"type" equalTo:@"unannouncer"];
+    } else if (listShowIndex == 1){
+        [queryUser whereKey:@"type" equalTo:@"announcer"];
+    }
     [queryUser orderByAscending:@"username"];
     
     PFQuery *queryChannel = [Channel query];
@@ -88,6 +104,9 @@
     [self presentViewController:viewcontroller animated:YES completion:nil];
 }
 
+- (IBAction)listShowChange:(id)sender {
+    [self getUnannouncerIDs];
+}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *cellIdentifier = @"unanouncerCell";

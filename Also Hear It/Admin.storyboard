@@ -82,7 +82,19 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="2PW-Di-yFC">
+                        <nil key="title"/>
                         <barButtonItem key="backBarButtonItem" title=" " id="SCG-hn-35s"/>
+                        <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="4TB-fb-fWp">
+                            <rect key="frame" x="180" y="7" width="240" height="30"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <segments>
+                                <segment title="Unannouncer"/>
+                                <segment title="Announcer"/>
+                            </segments>
+                            <connections>
+                                <action selector="listShowChange:" destination="bb0-s5-XYn" eventType="valueChanged" id="QdD-wA-sEV"/>
+                            </connections>
+                        </segmentedControl>
                         <barButtonItem key="rightBarButtonItem" title="Logout" style="done" id="Lgt-1G-Rln">
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
@@ -90,6 +102,9 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="listShowSegmentedControl" destination="4TB-fb-fWp" id="tSa-Ym-vNf"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xtr-Ut-5a3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -133,10 +148,10 @@
                                     <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="gru-Ce-47P">
                                         <rect key="frame" x="0.0" y="10" width="560" height="230"/>
                                     </mapView>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="Location" translatesAutoresizingMaskIntoConstraints="NO" id="OMA-yg-Dlz">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Location" translatesAutoresizingMaskIntoConstraints="NO" id="OMA-yg-Dlz">
                                         <rect key="frame" x="255" y="75" width="50" height="50"/>
                                     </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OLh-b0-BHF">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OLh-b0-BHF">
                                         <rect key="frame" x="20" y="35" width="520" height="30"/>
                                         <color key="backgroundColor" red="0.01176470588" green="0.80000000000000004" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
