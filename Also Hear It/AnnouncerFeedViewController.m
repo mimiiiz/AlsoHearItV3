@@ -155,6 +155,7 @@
      cell.imageFlag.image = [UIImage imageNamed:priorityFlagName];
      cell.tagLabel.text = [self getTags:object.tags];
      
+     
      dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
          // retrive image on global queue
          PFFile *attachImageFile = object.image;
@@ -175,7 +176,10 @@
      cell.profilePic.image = [UIImage imageNamed:@"Profile.png"];
      PFFile *imageFile = object.channel.channelPic;
      [imageFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-         cell.profilePic.image = [UIImage imageWithData:data];
+         if(!error){
+             cell.profilePic.image = [UIImage imageWithData:data];
+
+         }
      }];
      
      

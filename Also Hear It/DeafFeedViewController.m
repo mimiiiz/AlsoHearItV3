@@ -255,7 +255,9 @@
         cell.profilePic.image = [UIImage imageNamed:@"Profile.png"];
         PFFile *imageFile = objectResults.channel.channelPic;
         [imageFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-            cell.profilePic.image = [UIImage imageWithData:data];
+            if(!error){
+                cell.profilePic.image = [UIImage imageWithData:data];
+            }
         }];
         
         cell.timeLabel.text = [self getTime:objectResults.createdAt];
@@ -292,7 +294,9 @@
         cell.profilePic.image = [UIImage imageNamed:@"Profile.png"];
         PFFile *imageFile = object.channel.channelPic;
         [imageFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-            cell.profilePic.image = [UIImage imageWithData:data];
+            if(!error){
+                cell.profilePic.image = [UIImage imageWithData:data];
+            }
         }];
         
         cell.timeLabel.text = [self getTime:object.createdAt];
