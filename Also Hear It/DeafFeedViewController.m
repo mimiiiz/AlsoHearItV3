@@ -19,7 +19,11 @@
 
 
 @interface DeafFeedViewController ()
-@property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
+@property (strong, nonatomic) UISearchController *searchController;
+@property (strong, nonatomic) NSArray *filteredMessages;
+
+
+//this custom controller is only suppose to have number of rows and cell for row function of table datasource
 
 @end
 
@@ -60,9 +64,24 @@
     self.tableView.estimatedRowHeight = 100.0;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     self.navigationController.navigationBar.translucent = NO;
-    self.searchBar.translucent = false;
-    self.searchBar.barTintColor = [UIColor clearColor];
-    self.searchBar.backgroundImage = [UIImage new];
+    
+    self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
+    self.searchController.searchResultsUpdater = self;
+    self.searchController.dimsBackgroundDuringPresentation = NO;
+    self.searchController.searchBar.delegate = self;
+    self.tableView.tableHeaderView = self.searchController.searchBar;
+    self.searchController.searchBar.scopeButtonTitles =@[];
+  //@[@"Message", @"Place", @"Tag"];
+    self.definesPresentationContext = YES;
+    [self.searchController.searchBar sizeToFit];
+    self.searchController.hidesNavigationBarDuringPresentation = NO;
+
+    
+    
+    self.searchController.searchBar.translucent = false;
+    self.searchController.searchBar.barTintColor = [UIColor colorWithRed:3.0/255.0 green:204.0/255.0 blue:153.0/255.0 alpha:1];
+    self.searchController.searchBar.tintColor = [UIColor whiteColor];
+
 
 
     // Uncomment the following line to preserve selection between presentations.
@@ -71,6 +90,7 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
+
 
 - (void)viewDidUnload {
     [super viewDidUnload];
@@ -99,7 +119,6 @@
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
-
 
 #pragma mark - PFQueryTableViewController
 
@@ -137,7 +156,58 @@
     
     return query;
 }
+- (void)searchForText:(NSString *)searchTerm scope:(NSInteger)scope{
+    
+    currentUser = [ASUser currentUser];
+    PFQuery *query = [Message query];
+    [query whereKey:@"receiver" equalTo:currentUser];
+    [query includeKey:@"channel"];
+    switch (scope) {
+        case 0:
+            [query whereKey:@"text" containsString:searchTerm];
+            break;
+        case 1:
+            [query whereKey:@"text" containsString:searchTerm];
+            break;
+        case 2:
+            [query whereKey:@"text" containsString:searchTerm];
+            break;
+        default:
+            break;
+    }
+    
+    [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+        self.filteredMessages = [NSArray arrayWithArray:objects];
+        [self.tableView reloadData];
+    }];
+}
 
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchController
+{
+    NSString *searchString = searchController.searchBar.text;
+    [self searchForText:searchString scope:0];
+}
+
+- (void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope
+{
+    [self updateSearchResultsForSearchController:self.searchController];
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (self.searchController.active )
+    {
+        NSLog(@"FilteredMesssage %lu",[self.filteredMessages count]);
+        
+        return [self.filteredMessages count];
+        
+    }
+    else
+    {
+        NSLog(@"objects 2 %lu",[self.objects count]);
+        
+        return [self.objects count];
+    }
+}
 
 
 // Override to customize the look of a cell representing an object. The default is to display
@@ -151,40 +221,86 @@
         cell = [[PFTableCustomViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
-    // Configure the cell
-    cell.nameLabel.text = object.channel.name;
-    cell.messageLabel.text = object.text;
-    
-    NSNumber *priority = [TagsList getPriority:object.tags];
-    NSString *priorityFlagName = [NSString stringWithFormat:@"bookmark-%@", priority];
-    cell.imageFlag.image = [UIImage imageNamed:priorityFlagName];
-    cell.tagLabel.text = [self getTags:object.tags];
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        // retrive image on global queue
-        PFFile *attachImageFile = object.image;
-        UIImage * img = [UIImage imageWithData:[attachImageFile getData]];
+
+    if (self.searchController.active) {
+        // Configure the cell
+        Message *objectResults = [self.filteredMessages objectAtIndex:indexPath.row];
+
+        cell.nameLabel.text = objectResults.channel.name;
+        cell.messageLabel.text = objectResults.text;
         
-        dispatch_async(dispatch_get_main_queue(), ^{
+        NSNumber *priority = [TagsList getPriority:objectResults.tags];
+        NSString *priorityFlagName = [NSString stringWithFormat:@"bookmark-%@", priority];
+        cell.imageFlag.image = [UIImage imageNamed:priorityFlagName];
+        cell.tagLabel.text = [self getTags:objectResults.tags];
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            // retrive image on global queue
+            PFFile *attachImageFile = objectResults.image;
+            UIImage * img = [UIImage imageWithData:[attachImageFile getData]];
             
-            //PFTableCustomViewCell * cell = (PFTableCustomViewCell *)[tableView cellForRowAtIndexPath:indexPath];
-            // assign cell image on main thread
-            if(img){
-                cell.attachImage.image = [UIImage imageNamed:@"imageAvailable-2"];
-            }else {
-                cell.attachImage.image = nil;
-            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                //PFTableCustomViewCell * cell = (PFTableCustomViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+                // assign cell image on main thread
+                if(img){
+                    cell.attachImage.image = [UIImage imageNamed:@"imageAvailable-2"];
+                }else {
+                    cell.attachImage.image = nil;
+                }
+            });
         });
-    });
+        
+        
+        cell.profilePic.image = [UIImage imageNamed:@"Profile.png"];
+        PFFile *imageFile = objectResults.channel.channelPic;
+        [imageFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+            cell.profilePic.image = [UIImage imageWithData:data];
+        }];
+        
+        cell.timeLabel.text = [self getTime:objectResults.createdAt];
+        
+    }else{
+
+        // Configure the cell
+        cell.nameLabel.text = object.channel.name;
+        cell.messageLabel.text = object.text;
+        
+        NSNumber *priority = [TagsList getPriority:object.tags];
+        NSString *priorityFlagName = [NSString stringWithFormat:@"bookmark-%@", priority];
+        cell.imageFlag.image = [UIImage imageNamed:priorityFlagName];
+        cell.tagLabel.text = [self getTags:object.tags];
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            // retrive image on global queue
+            PFFile *attachImageFile = object.image;
+            UIImage * img = [UIImage imageWithData:[attachImageFile getData]];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                //PFTableCustomViewCell * cell = (PFTableCustomViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+                // assign cell image on main thread
+                if(img){
+                    cell.attachImage.image = [UIImage imageNamed:@"imageAvailable-2"];
+                }else {
+                    cell.attachImage.image = nil;
+                }
+            });
+        });
+        
+        
+        cell.profilePic.image = [UIImage imageNamed:@"Profile.png"];
+        PFFile *imageFile = object.channel.channelPic;
+        [imageFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+            cell.profilePic.image = [UIImage imageWithData:data];
+        }];
+        
+        cell.timeLabel.text = [self getTime:object.createdAt];
+    }
+        
     
     
-    cell.profilePic.image = [UIImage imageNamed:@"Profile.png"];
-    PFFile *imageFile = object.channel.channelPic;
-    [imageFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-        cell.profilePic.image = [UIImage imageWithData:data];
-    }];
     
-    cell.timeLabel.text = [self getTime:object.createdAt];
     return cell;
 }
 -(NSString *)appendTagsName:(PFRelation *)tags{
