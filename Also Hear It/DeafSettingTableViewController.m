@@ -46,7 +46,11 @@
 - (void)deafLogout {
     [Channel unpinAllObjectsInBackground];
     [Tag unpinAllObjectsInBackground];
-    [ASUser logOutInBackground];
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    [currentInstallation setObject:@[@"admin"] forKey:@"channels"];
+    [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+        [ASUser logOutInBackground];
+    }];
     UIStoryboard* storyborad = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     UIViewController* viewcontroller = [storyborad instantiateInitialViewController];
     [self presentViewController:viewcontroller animated:YES completion:nil];

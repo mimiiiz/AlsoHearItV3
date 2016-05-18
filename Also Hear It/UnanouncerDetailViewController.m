@@ -57,7 +57,9 @@
     self.channelNameLabel.text = self.unanouncerData.name;
     self.channelNameLabel.layer.masksToBounds = YES;
     self.channelNameLabel.layer.cornerRadius = 10.0;
-    
+    if(self.unanouncerData.radius != nil){
+        self.radiusText.text = [NSString stringWithFormat:@"%@",self.unanouncerData.radius];
+    }
     [self setLocationText:self.loactionLabel :self.unanouncerData.location.latitude:self.unanouncerData.location.longitude];
     
     [self.loadingView stopAnimating];

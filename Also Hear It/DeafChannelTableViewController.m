@@ -43,10 +43,10 @@
 }
 
 - (void)setupUI{
-    self.currentLabel.text = @"loading...";
-    [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
-        [self setCurrentChannel:geoPoint];
-    }];
+    self.currentLabel.text = @"Tap top right button to locate";
+//    [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
+//        [self setCurrentChannel:geoPoint];
+//    }];
 }
 -(void)setupData {
     
@@ -91,10 +91,15 @@
     currentChannel = [self findNearestChannel:geoPoint];
     
     if(currentChannel != NULL){
-        self.currentLabel.text = currentChannel.name;
         [self assignChannel:currentChannel];
     } else {
-        self.currentLabel.text = @"Place not found. Please try again";
+        PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+        [currentInstallation setObject:@[@"admin"] forKey:@"channels"];
+        [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+            self.currentLabel.text = @"Place not found. Please try again";
+        }];
+        
+
     }
 }
 - (void)locationManager:(CLLocationManager *)manager
@@ -130,7 +135,9 @@
 }
 
 - (void)assignChannel:(Channel *)channel{
+    
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    
     NSMutableArray *selectedTagsPref = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"TagsPref"]];
     NSMutableArray *Channeltexts = [NSMutableArray array];
     NSCharacterSet *charactersToRemove = [[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_"] invertedSet];
@@ -141,7 +148,9 @@
     }
     [Channeltexts addObject:@"admin"];
     [currentInstallation setObject:Channeltexts forKey:@"channels"];
-    [currentInstallation saveInBackground];
+    [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+        self.currentLabel.text = currentChannel.name;
+    }];
     
     currentUser.channels = Channeltexts;
     [currentUser saveInBackground];

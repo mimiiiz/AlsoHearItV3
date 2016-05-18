@@ -12,6 +12,7 @@
 @interface MapPinViewController ()<MKMapViewDelegate>
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 
+
 @end
 
 @implementation MapPinViewController{
@@ -34,27 +35,38 @@
     [query fromLocalDatastore];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error){
         channels = [NSArray arrayWithArray:objects];
-        [self setupUI];
+        [self addPinFromChannels];
     }];
+    [self setupUI];
+
 }
 
 - (void)setupUI{
     self.mapView.delegate = self;
+    [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error){
+        if(!error){
+            CLLocationCoordinate2D currentUserlocation;
+            currentUserlocation.latitude = geoPoint.latitude;
+            currentUserlocation.longitude = geoPoint.longitude;
+            [self goToLocation:currentUserlocation];
+        }
+
+    }];
     
-    [self gotoCurrentLocation];
-    [self addPinFromChannels];
+
+    
+    
 }
 
-- (void)gotoCurrentLocation{
-    [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
-        MKCoordinateRegion region;
-        MKCoordinateSpan span;
-        span.latitudeDelta = 0.025;
-        span.longitudeDelta = 0.025;
-        region.span = span;
-        region.center = CLLocationCoordinate2DMake(self.currentChannel.location.latitude, self.currentChannel.location.longitude);
-        [self.mapView setRegion:region animated:YES];
-    }];
+
+- (void)goToLocation:(CLLocationCoordinate2D )location{
+    MKCoordinateRegion region;
+    MKCoordinateSpan span;
+    span.latitudeDelta = 0.025;
+    span.longitudeDelta = 0.025;
+    region.span = span;
+    region.center = CLLocationCoordinate2DMake(location.latitude, location.longitude);
+    [self.mapView setRegion:region animated:YES];
 }
 
 - (void)addPinFromChannels{
