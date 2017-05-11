@@ -323,6 +323,10 @@
             [self sendPushNotification];
         }
     }];
+    
+    [self setAnimationLoading:NO];
+    self.progressBar.progress = 1.0;
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 - (UIImage *)scaleImage:(UIImage *)originalImage toSize:(CGSize)size
 {
@@ -371,21 +375,25 @@
 }
 
 -(void) sendPushNotification{
-    PFPush *push = [[PFPush alloc] init];
-    [push setChannels:channelnameWithTag];
+//    PFPush *push = [[PFPush alloc] init];
+//    [push setChannels:channelnameWithTag];
+//    NSLog(@"CT: %@", channelnameWithTag); //array
+//    NSLog(@"an Name: %@", announcerChannel.name); //nal name
     NSString *pushText = [NSString stringWithFormat:@"%@ | %@",announcerChannel.name ,textFromInput];
     if (textFromInput.length >200) {
         pushText = [textFromInput substringToIndex:200];
     }
-    [push setMessage:pushText];
-    [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error){
-        if (succeeded) {
-            NSLog(@"sendpushnotification");
-            [self setAnimationLoading:NO];
-            self.progressBar.progress = 1.0;
-            [self dismissViewControllerAnimated:YES completion:nil];
-        }
-    }];
+//    [push setMessage:pushText];
+//    [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error){
+//        if (succeeded) {
+//            NSLog(@"sendpushnotification");
+//            [self setAnimationLoading:NO];
+//            self.progressBar.progress = 1.0;
+//            [self dismissViewControllerAnimated:YES completion:nil];
+//        }
+//    }];
+    
+    [PFCloud callFunctionInBackground:@"pushMessage" withParameters:@{@"message": pushText, @"channels": channelnameWithTag}];
 }
 
 - (void)textViewDidBeginEditing:(UITextView *)textView{

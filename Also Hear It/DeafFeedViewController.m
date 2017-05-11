@@ -40,7 +40,7 @@
         self.parseClassName = @"Message";
         self.pullToRefreshEnabled = YES;
         self.paginationEnabled = YES;
-        self.objectsPerPage = 10;
+        self.objectsPerPage = 5;
         
     }
     return self;

@@ -123,9 +123,10 @@
     for (Channel *tmp in channels){
         double distance = [currentGeopoint distanceInKilometersTo:tmp.location];
         double radius = [tmp.radius doubleValue]/1000;
-//        NSLog(@"user latitude %f : longitude %f",currentGeopoint.latitude ,currentGeopoint.longitude);
-//        NSLog(@"channel latitude %f : longitude %f",tmp.location.latitude ,tmp.location.longitude);
-//        NSLog(@"Distance from user to %@ channel is %f km",tmp.name ,distance);
+        NSLog(@"user latitude %f : longitude %f",currentGeopoint.latitude ,currentGeopoint.longitude);
+        NSLog(@"channel latitude %f : longitude %f",tmp.location.latitude ,tmp.location.longitude);
+        NSLog(@"Distance from user to %@ channel is %f km",tmp.name ,distance);
+        NSLog(@"%f", radius);
         if (distance <= radius && distance < nearestRange){
             nearestChannel = tmp;
             nearestRange = distance;

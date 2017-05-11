@@ -163,7 +163,7 @@
     user.lastname = dataStorage.lastname;
     user.birthdate = dataStorage.birthdate;
     user.gender = dataStorage.gender;
-    user.type = @"unannouncer";
+    user.type = @"announcer";
     
     Channel *channel = [Channel object];
     channel.name = self.placenameTextField.text;

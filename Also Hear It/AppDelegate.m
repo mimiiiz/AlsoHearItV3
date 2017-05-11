@@ -23,10 +23,19 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
 
-    [Parse enableLocalDatastore];
+//    [Parse enableLocalDatastore];
     
-    [Parse setApplicationId:@"a0krOULyEuI1AX9NWceyb6h8bLhMZypwyHiQwKbq"
-                  clientKey:@"NHThM9E2eSy2QuxEbvRaM0oFUP1LkKPyyZLpjCKq"];
+//    [Parse setApplicationId:@"a0krOULyEuI1AX9NWceyb6h8bLhMZypwyHiQwKbq"
+//                  clientKey:@"NHThM9E2eSy2QuxEbvRaM0oFUP1LkKPyyZLpjCKq"
+//    ];
+//    
+    [Parse initializeWithConfiguration:[ParseClientConfiguration configurationWithBlock:^(id<ParseMutableClientConfiguration> configuration) {
+        configuration.applicationId = @"a0krOULyEuI1AX9NWceyb6h8bLhMZypwyHiQwKbq";
+        configuration.clientKey = @"NHThM9E2eSy2QuxEbvRaM0oFUP1LkKPyyZLpjCKq";
+        configuration.server = @"http://139.59.230.170:1337/parse";
+        configuration.localDatastoreEnabled = true;
+        
+    }]];
     
     UIUserNotificationType userNotificationTypes = (UIUserNotificationTypeAlert |
                                                     UIUserNotificationTypeBadge |
