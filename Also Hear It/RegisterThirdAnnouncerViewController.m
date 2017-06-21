@@ -168,6 +168,7 @@
     Channel *channel = [Channel object];
     channel.name = self.placenameTextField.text;
     channel.location = dataStorage.location;
+    channel.radius = [NSNumber numberWithDouble:1000.00];
     
     channel.announcer = user;
     

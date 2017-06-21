@@ -51,8 +51,8 @@
     UIImage* logoImage = [UIImage imageNamed:@"WhiteBarLogo.png"];
     self.navigationItem.titleView = [[UIImageView alloc] initWithImage:logoImage];
     [self.loadingView stopAnimating];
-    self.titleLabel.text = @"Sign up";
-    self.bodyLabel.text = @"Also hear it accept term. Also hear it accept term. Also hear it accept term. Also hear it accept term. Also hear it accept term. Also hear it accept term. Also hear it accept term. Also hear it accept term. Also hear it accept term. Also hear it accept term. Also hear it accept term. Also hear it accept term. Also hear it accept term.";
+    self.titleLabel.text = @"Disclaimers";
+    self.bodyLabel.text = @"All content and messages in this app is created by users, the developers takes no responsible for app misused and incorrect information.";
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(goToMainPage)

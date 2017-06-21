@@ -43,7 +43,7 @@
 }
 
 - (void)setupUI{
-    self.currentLabel.text = @"Tap top right button to locate";
+    self.currentLabel.text = @"Tap locate button to get the nearest channel.";
 //    [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
 //        [self setCurrentChannel:geoPoint];
 //    }];
@@ -126,7 +126,7 @@
         NSLog(@"user latitude %f : longitude %f",currentGeopoint.latitude ,currentGeopoint.longitude);
         NSLog(@"channel latitude %f : longitude %f",tmp.location.latitude ,tmp.location.longitude);
         NSLog(@"Distance from user to %@ channel is %f km",tmp.name ,distance);
-        NSLog(@"%f", radius);
+        NSLog(@"Channel's radius: %f", radius);
         if (distance <= radius && distance < nearestRange){
             nearestChannel = tmp;
             nearestRange = distance;

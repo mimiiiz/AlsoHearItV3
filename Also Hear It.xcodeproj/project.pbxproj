@@ -191,6 +191,7 @@
 		CC3E6EF81C5CE1F00026060D /* AnnouncerEditProfileTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnnouncerEditProfileTableViewController.m; sourceTree = "<group>"; };
 		CC3E6EFD1C5E1D300026060D /* ChannelEditTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChannelEditTableViewController.h; sourceTree = "<group>"; };
 		CC3E6EFE1C5E1D300026060D /* ChannelEditTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChannelEditTableViewController.m; sourceTree = "<group>"; };
+		FF4002B81EC5A6DE006FC27D /* Also Hear It.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Also Hear It.entitlements"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -386,6 +387,7 @@
 		BCB8D19F1BAC502100EAABE5 /* Also Hear It */ = {
 			isa = PBXGroup;
 			children = (
+				FF4002B81EC5A6DE006FC27D /* Also Hear It.entitlements */,
 				BCB8D1A31BAC502100EAABE5 /* AppDelegate.h */,
 				BCB8D1A41BAC502100EAABE5 /* AppDelegate.m */,
 				BC1C85711BC61CA300E961AE /* Models */,
@@ -506,7 +508,7 @@
 				TargetAttributes = {
 					BCB8D19C1BAC502100EAABE5 = {
 						CreatedOnToolsVersion = 7.0;
-						DevelopmentTeam = EGW439G3PM;
+						DevelopmentTeam = KLDSPHMD9M;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -752,9 +754,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Also Hear It/Also Hear It.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = EGW439G3PM;
+				DEVELOPMENT_TEAM = KLDSPHMD9M;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -778,7 +781,7 @@
 				INFOPLIST_FILE = "Also Hear It/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.KMITL.Also-Hear-It";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.amita.Also-Hear-It";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -790,9 +793,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Also Hear It/Also Hear It.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = EGW439G3PM;
+				DEVELOPMENT_TEAM = KLDSPHMD9M;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -816,7 +820,7 @@
 				INFOPLIST_FILE = "Also Hear It/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.KMITL.Also-Hear-It";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.amita.Also-Hear-It";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";

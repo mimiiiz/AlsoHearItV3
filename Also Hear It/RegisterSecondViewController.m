@@ -213,7 +213,7 @@
         
     }else if (textField == self.birthdateTextField){
         self.titleLabel.text = @"Birthday";
-        self.bodyLabel.text = @"Select year in BE.";
+        self.bodyLabel.text = @"Select your birthday.";
         
     }
 }
